@@ -1,0 +1,8 @@
+- name: Wait for hosts
+  ansible.builtin.wait_for:
+    host: "{{ ansible_host }}"
+    port: 22
+    timeout: 900
+    sleep: 5
+    search_regex: "OpenSSH"
+  delegate_to: localhost

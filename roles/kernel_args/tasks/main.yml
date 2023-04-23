@@ -1,0 +1,11 @@
+- name: Set distribution
+  ansible.builtin.import_tasks: variant-detection-fedora.yml
+
+- name: Install missing packages
+  ansible.builtin.include_tasks: "packages-{{ distribution | lower }}.yml"
+
+- name: Check for vulnerabilities
+  ansible.builtin.import_tasks: vulnerabilities.yml
+
+- name: Add kernel argument if required
+  ansible.builtin.include_tasks: "kernel-args-{{ distribution | lower }}.yml"

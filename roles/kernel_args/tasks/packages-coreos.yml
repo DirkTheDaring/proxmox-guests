@@ -1,0 +1,23 @@
+- name: Set fact for required_packages
+  ansible.builtin.set_fact:
+    required_packages: []
+
+- name: Check if jq is already there
+  ansible.builtin.stat:
+    path: /usr/bin/jq
+    get_checksum: false
+  register: result
+
+- name: Add jq to install when it does not exist
+  ansible.builtin.set_fact:
+    required_packages: "{{ required_packages + ['jq'] }}"
+  when:
+    - not result.stat.exists
+
+- name: Install with rpm-ostreee live, as these packackages do not change a kernel param
+  ansible.builtin.command: "rpm-ostree install --assumeyes --idempotent --apply-live {{ required_packages | join(' ') }}"
+  register: output
+  changed_when: output.rc != 0
+  failed_when: output.rc != 0
+  when:
+    - required_packages|length > 0

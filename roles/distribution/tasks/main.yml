@@ -1,0 +1,2 @@
+- name: Override disribution if required
+  ansible.builtin.import_tasks: variant-detection-fedora.yml

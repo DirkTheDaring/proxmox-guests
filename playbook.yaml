@@ -1,0 +1,36 @@
+- name: Set ansible_distribution if required
+  roles:
+    - distribution
+  hosts:
+    - all_available_hosts
+
+- name: Configure kernel args
+  roles:
+    - kernel_args
+  hosts:
+    - group_kernel_args
+
+- name: Configure parameters for kernel modules
+  roles:
+    - kernel_modules
+  hosts:
+    - group_kernel_modules
+
+- name: Configure proxy settings
+  roles:
+    - proxy_settings
+  hosts:
+    - group_proxy_settings
+
+
+- name: Configure packages
+  roles:
+    - packages
+  hosts:
+    - group_packages
+
+- name: Wait for changes
+  roles:
+    - wait
+  hosts:
+    - all_available_hosts

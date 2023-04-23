@@ -1,0 +1,7 @@
+- name: Set kernel arg kvm.nx_huge_pages=off
+  ansible.builtin.command: "grubby --update-kernel=ALL --args=kvm.nx_huge_pages=off"
+  register: output
+  changed_when: output.rc != 0
+  failed_when: output.rc != 0
+  when:
+    - vulnerability_itlb_multihit

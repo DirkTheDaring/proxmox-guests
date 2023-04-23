@@ -1,0 +1,20 @@
+  # jq:
+  # '.lscpu[]|select(.field=="Vulnerability Itlb multihit:")|.data'
+  # jmespath:
+  # lscpu[?field=='Vulnerabilities:']|[0].children[?field=='Itlb multihit:']|[0].data
+  # lscpu[?field=='Vulnerabilities:'].children[0][?field=='Itlb multihit:'].data|[0]
+
+  # https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/multihit.
+- name: Run lscpu
+  ansible.builtin.command:
+    argv:
+      - bash
+      - -c
+      - "lscpu --json | jq -r '.lscpu[]|select(.field==\"Vulnerability Itlb multihit:\")|.data'"
+  register: output
+  changed_when: output.rc != 0
+  failed_when: output.rc != 0
+
+- name: Extract itlbd vulnerability
+  ansible.builtin.set_fact:
+    vulnerability_itlb_multihit: "{{ false if output.stdout == 'Not affected' else true }}"

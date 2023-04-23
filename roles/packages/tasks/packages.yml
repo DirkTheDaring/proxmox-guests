@@ -1,0 +1,15 @@
+- name: Install packages with rpm-ostree
+  ansible.builtin.command: "rpm-ostree --idempotent install {{ packages | join(' ') }}"
+  register: result
+  failed_when: result.rc != 0
+  changed_when: result.rc != 0
+  when:
+    - ansible_distribution == 'CoreOS'
+    - packages|length > 0
+
+- name: Install packages with dnf
+  ansible.builtin.dnf:
+    name: "{{ packages }}"
+  when:
+    - ansible_distribution == 'Fedora'
+    - packages|length > 0

@@ -1,0 +1,33 @@
+- name: Set fact for required_packages
+  ansible.builtin.set_fact:
+    required_packages: []
+
+- name: Check if jq is already there
+  ansible.builtin.stat:
+    path: /usr/bin/jq
+    get_checksum: false
+  register: result
+
+- name: Add jq to install when it does not exist
+  ansible.builtin.set_fact:
+    required_packages: "{{ required_packages + ['jq'] }}"
+  when:
+    - not result.stat.exists
+
+- name: Check if grubby is already there
+  ansible.builtin.stat:
+    path: /usr/sbin/grubby
+    get_checksum: false
+  register: result
+
+- name: Add grubby to install when it does not exist
+  ansible.builtin.set_fact:
+    required_packages: "{{ required_packages + ['grubby'] }}"
+  when:
+    - not result.stat.exists
+
+- name: Install required_packages
+  ansible.builtin.dnf:
+    name: "{{ required_packages }}"
+  when:
+    - required_packages|length > 0

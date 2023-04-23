@@ -1,0 +1,2 @@
+- name: Configure proxy settings
+  ansible.builtin.import_tasks: proxy.yml

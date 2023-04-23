@@ -1,0 +1,11 @@
+- name: Determine if it is coroes
+  ansible.builtin.command: "awk -F= '/^VARIANT_ID=/ { print $2; exit }' /etc/os-release"
+  register: variant_id_result
+  changed_when: variant_id_result.rc != 0
+  failed_when: variant_id_result.rc != 0
+  when:
+    - ansible_distribution == 'Fedora'
+
+- name: Set Fact
+  ansible.builtin.set_fact:
+    distribution: "{{ 'CoreOS' if variant_id_result.stdout == 'coreos' else ansible_distribution }}"

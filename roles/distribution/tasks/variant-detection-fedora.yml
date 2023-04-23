@@ -1,0 +1,16 @@
+- name: Override fact ansible_distribution if required
+  ansible.builtin.command: "awk -F= '/^VARIANT_ID=/ { print $2; exit }' /etc/os-release"
+  register: variant_id_result
+  changed_when: variant_id_result.rc != 0
+  failed_when: variant_id_result.rc != 0
+  when:
+    - ansible_distribution == 'Fedora'
+
+- name: Set Fact ansible_distribution
+  ansible.builtin.set_fact:
+    ansible_distribution: "CoreOS"
+  when: variant_id_result.stdout == "coreos"
+
+- name: Debug
+  ansible.builtin.debug:
+    msg: "{{ ansible_distribution }}"
