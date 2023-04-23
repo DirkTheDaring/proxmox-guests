@@ -1,0 +1,38 @@
+---
+plugin: group_assembler
+use_extra_vars: true
+
+ping_filter:
+  all_available_hosts:
+    group: all
+    enabled: true
+    add_alive_flag: is_alive
+
+groups_filter:
+  - name: group_kernel_args
+    group: all_available_hosts
+    matchExpressions:
+      - operator: In
+        key: feature_flag_kernel_args
+        values: [true]
+
+  - name: group_kernel_modules
+    group: all_available_hosts
+    matchExpressions:
+      - operator: In
+        key: feature_flag_kernel_modules
+        values: [true]
+
+  - name: group_proxy_settings
+    group: all_available_hosts
+    matchExpressions:
+      - operator: In
+        key: feature_flag_proxy_settings
+        values: [true]
+
+  - name: group_packages
+    group: all_available_hosts
+    matchExpressions:
+      - operator: In
+        key: feature_flag_packages
+        values: [true]

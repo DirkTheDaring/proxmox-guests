@@ -1,0 +1,14 @@
+all:
+  hosts:
+    prod-machine:
+      ansible_become: true
+      ansible_become_user: root
+      packages:
+        - vim
+
+  vars:
+    # Feature flags
+    feature_flag_kernel_args: false
+    feature_flag_kernel_modules: false
+    feature_flag_proxy_settings: false
+    feature_flag_packages: true
